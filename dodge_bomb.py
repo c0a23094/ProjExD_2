@@ -41,7 +41,7 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
 #         pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
 
 
-#gameover実装
+#gameover実装!
 def gameover(screen: pg.Surface) -> None:
     loseback_img = pg.Surface((1100,650))
     pg.draw.rect(loseback_img,(0,0,0),(0,0,1100,650))
