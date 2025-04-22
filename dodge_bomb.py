@@ -1,10 +1,13 @@
 import os
 import random
+import time
 import sys
 import pygame as pg
 
 
 WIDTH, HEIGHT = 1100, 650
+center_x = 550
+center_y = 300
 
 DELTA = {
     pg.K_UP : (0,-5),
@@ -30,6 +33,29 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
+    # lose(GameOver)
+def gameover(screen: pg.Surface) -> None:
+
+
+    loseback_img = pg.Surface((1100,650))
+    pg.draw.rect(loseback_img,(0,0,0),(0,0,1100,650))
+    pg.Surface.set_alpha(loseback_img, (100))
+    
+    # lose文字
+    lose_fonto = pg.font.Font(None, 120)
+    Gameover_txt = lose_fonto.render("Game Over",True, (255, 255, 255))
+
+    # loseこうかとん
+    j_x = 350 # 左右対称用座標
+    lose_img = pg.transform.rotozoom(pg.image.load("fig/8.png"),0 ,1)
+    loseL_rct = lose_img.get_rect()
+    # loseL_rct.center = 300, 200
+    loseR_rct = lose_img.get_rect()
+    # loseR_rct.center = 600, 200
+    screen.blit(loseback_img,[0,0]) # 黒画面
+    screen.blit(lose_img,[center_x - j_x,center_y]) # L
+    screen.blit(lose_img,[center_x + j_x,center_y]) # R
+    screen.blit(Gameover_txt, [center_x - 200, center_y])
 
 
 def main():
@@ -40,14 +66,17 @@ def main():
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
+    
     # Bomb
     bb_img = pg.Surface((20,20))
-    pg.draw.circle(bb_img, (255,0,0),(10,10),10)
+    pg.draw.circle(bb_img, (255,0,0), (10,10),10 )
     bb_rct = bb_img.get_rect()
     bb_rct.centerx = random.randint(0, WIDTH)
     bb_rct.centery = random.randint(0, HEIGHT)
+    
     bb_img.set_colorkey((0, 0, 0))
     vx, vy = +5, +5
+
 
     clock = pg.time.Clock()
     tmr = 0
@@ -59,6 +88,10 @@ def main():
         
         if kk_rct.colliderect(bb_rct):
             print("Game Over")
+            gameover(screen)
+            pg.display.update()
+            # time.sleep(5)
+            time.sleep(3)
             return
 
         key_lst = pg.key.get_pressed()
